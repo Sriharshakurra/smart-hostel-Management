@@ -1,0 +1,62 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block content %}
+<h1>View Room Details</h1>
+
+<form method="get" action="{% url 'admin:room_filter_view' %}">
+  <fieldset class="module aligned">
+    {{ form.as_p }}
+    <button type="submit" class="default">View</button>
+  </fieldset>
+</form>
+
+{% if room_obj %}
+  <h2>Room Details:</h2>
+  <table class="adminlist">
+    <tr><th>Room Number</th><td>{{ room_obj.room_number }}</td></tr>
+    <tr><th>Floor</th><td>{{ room_obj.floor }}</td></tr>
+    <tr><th>Capacity</th><td>{{ room_obj.capacity }}</td></tr>
+    <tr><th>Rent</th><td>{{ room_obj.rent }}</td></tr>
+    <tr><th>Attached Washroom</th><td>{{ room_obj.has_attached_washroom|yesno:"Yes,No" }}</td></tr>
+    <tr><th>Available Slots</th><td>{{ room_obj.available_slots }}</td></tr>
+  </table>
+
+  <br>
+
+  {% if members %}
+    <h3>Registered Members in Room:</h3>
+    <table class="adminlist">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Contact</th>
+          <th>Email</th>
+          <th>Joined</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for m in members %}
+          <tr>
+            <td>{{ m.full_name }}</td>
+            <td>{{ m.contact_number }}</td>
+            <td>{{ m.email }}</td>
+            <td>{{ m.joined_date }}</td>
+            <td>{{ m.payment_status }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No members found in this room.</p>
+  {% endif %}
+
+  <br>
+  <div>
+    <a href="{% url 'admin:change_room_view' %}" class="button">Change Room</a>
+    <a href="{% url 'admin:room_swap_view' %}" class="button">Swap Room</a>
+  </div>
+{% endif %}
+
+{% endblock %}
