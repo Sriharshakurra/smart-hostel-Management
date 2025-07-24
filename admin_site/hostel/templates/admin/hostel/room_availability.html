@@ -1,0 +1,56 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+  <h1 style="margin-bottom: 10px;">📊 Room Availability Overview</h1>
+  <p style="color:blue;">Debug Floors: {{ all_floors }}</p>
+
+  <form method="get" style="margin-bottom: 20px;">
+   <label for="floor-select"><strong>Select Floor:</strong></label>
+   <select name="floor" id="floor-select" required>
+    <option value="">-- Select Floor --</option>
+    {% for floor in all_floors %}
+      <option value="{{ floor }}" {% if selected_floor|stringformat:"s" == floor|stringformat:"s" %}selected{% endif %}>
+        Floor {{ floor }}
+      </option>
+    {% endfor %}
+   </select>
+   <button type="submit" name="view" style="margin-left: 10px;">View</button>
+  </form>
+
+
+  {% if view_triggered and not selected_floor %}
+    <p style="color: red;"><em>Please select a floor to view availability.</em></p>
+  {% endif %}
+
+  {% if view_triggered and selected_floor and room_data %}
+    <p><strong>Showing {{ room_data|length }} rooms for Floor {{ selected_floor }}</strong></p>
+    <table style="width:100%;border-collapse:collapse">
+      <thead>
+        <tr style="background:#f0f0f0;">
+          <th>Floor</th><th>Room No</th><th>Capacity</th><th>Occupied</th><th>Vacancy</th><th>Washroom</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for room in room_data %}
+        <tr>
+          <td>{{ room.floor }}</td>
+          <td>{{ room.room_number }}</td>
+          <td>{{ room.capacity }}</td>
+          <td>{{ room.occupied }}</td>
+          <td>
+            {% if room.vacancy == 0 %}
+              <span style="color:red;font-weight:bold;">0</span>
+            {% else %}
+              <span style="color:green;font-weight:bold;">{{ room.vacancy }}</span>
+            {% endif %}
+          </td>
+          <td>{{ room.has_washroom }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+  {% elif view_triggered and selected_floor %}
+    <p><em>No rooms found for Floor {{ selected_floor }}.</em></p>
+  {% endif %}
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends "admin/index.html" %}
+
+{% block content %}
+
+  <!-- Right-side Summary Box -->
+  <div style="float: right; width: 260px; padding: 10px; border: 2px solid #222; background: #f0f0f0; margin-left: 20px; border-radius: 6px;">
+    <h3 style="margin-top: 0;">🏠 Hostel Summary</h3>
+    <ul style="list-style: none; padding-left: 0;">
+      <li><strong>Total Rooms:</strong> {{ total_rooms }}</li>
+      <li><strong>Total Members:</strong> {{ total_members }}</li>
+      <li><strong>Active Members:</strong> {{ active_members }}</li>
+      <li><strong>Vacant Rooms:</strong> {{ vacant_rooms }}</li>
+    </ul>
+
+    <hr style="margin: 10px 0;">
+
+    <h4>🔗 Quick Links</h4>
+    <ul style="line-height: 1.8; list-style: none; padding-left: 0;">
+      <li><a href="{% url 'admin:room_availability_view' %}">📊 Room Availability Overview</a></li>
+      <li><a href="{% url 'admin:change_room_view' %}">👥 Change Member Room</a></li>
+      <li><a href="{% url 'admin:room_swap_view' %}">🔁 Swap Rooms</a></li>
+      <li><a href="{% url 'vacate_member_view' %}">🚪 Vacate Member</a></li>
+    </ul>
+  </div>
+
+  <!-- Main admin content -->
+  <div style="overflow: hidden;">
+    {{ block.super }}
+  </div>
+
+{% endblock %}

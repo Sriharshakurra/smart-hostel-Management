@@ -1,0 +1,45 @@
+
+
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block content %}
+<h2>Balance Payment</h2>
+
+<form method="get">
+  <label><strong>Select Floor:</strong></label>
+  <select name="floor" onchange="this.form.submit()">
+    <option value="">-- All Floors --</option>
+    {% for f in floors %}
+      <option value="{{ f }}" {% if f|stringformat:"s" == selected_floor %}selected{% endif %}>Floor {{ f }}</option>
+    {% endfor %}
+  </select>
+</form>
+
+<br>
+
+{% for room in room_data %}
+  <h3>Room {{ room.room_number }}</h3>
+  <table border="1" cellpadding="6">
+    <tr>
+      <th>Name</th>
+      <th>Contact</th>
+      <th>Paid (₹)</th>
+      <th>Total Rent (₹)</th>
+      <th>Balance (₹)</th>
+    </tr>
+    {% for m in room.members %}
+    <tr>
+      <td>{{ m.name }}</td>
+      <td>{{ m.contact }}</td>
+      <td>{{ m.paid }}</td>
+      <td>{{ m.total }}</td>
+      <td><strong>{{ m.balance }}</strong></td>
+    </tr>
+    {% endfor %}
+  </table>
+  <br>
+{% empty %}
+  <p>No pending dues found for this floor.</p>
+{% endfor %}
+{% endblock %}

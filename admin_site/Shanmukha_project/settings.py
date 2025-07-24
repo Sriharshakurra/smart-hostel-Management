@@ -33,7 +33,9 @@ ROOT_URLCONF = 'Shanmukha_project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],  # Optional, but good for future
+        'DIRS': [BASE_DIR / "templates",
+                 BASE_DIR / "admin_site" / "templates",
+                 BASE_DIR / "admin_site" / "hostel" / "templates"],  # Optional, but good for future
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -69,8 +71,10 @@ USE_TZ = True
 
 
 STATIC_URL = 'static/'
-STATICFILES_DIRS = [BASE_DIR / 'static']
+STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'

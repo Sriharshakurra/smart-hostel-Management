@@ -1,0 +1,23 @@
+{% extends "admin/change_form.html" %}
+
+{% block extrahead %}
+  {{ block.super }}
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{% endblock %}
+
+{% block extra_js %}
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      $('#id_room').change(function () {
+        const roomId = $(this).val();
+        if (roomId) {
+          $.get(`/get-room-rent/${roomId}/`, function (data) {
+            $('#id_total_rent').val(data.rent);  // update rent field
+          });
+        } else {
+          $('#id_total_rent').val(0);
+        }
+      });
+    });
+  </script>
+{% endblock %}

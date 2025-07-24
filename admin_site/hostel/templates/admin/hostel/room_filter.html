@@ -34,6 +34,7 @@
           <th>Email</th>
           <th>Joined</th>
           <th>Status</th>
+          <th>Balance (₹)</th>
         </tr>
       </thead>
       <tbody>
@@ -41,9 +42,20 @@
           <tr>
             <td>{{ m.full_name }}</td>
             <td>{{ m.contact_number }}</td>
-            <td>{{ m.email }}</td>
+            <td>{{ m.email|default:"None" }}</td>
             <td>{{ m.joined_date }}</td>
             <td>{{ m.payment_status }}</td>
+            <td>
+              {% with balance=m.get_balance %}
+                {% if balance > 0 %}
+                  <span style="color:red;">Due ₹{{ balance }}</span>
+                {% elif balance < 0 %}
+                  <span style="color:green;">Advance ₹{{ balance|floatformat:2|stringformat:"s"|slice:"1:" }}</span>
+                {% else %}
+                  <span style="color:gray;">₹0</span>
+                {% endif %}
+              {% endwith %}
+            </td>
           </tr>
         {% endfor %}
       </tbody>

@@ -1,0 +1,34 @@
+<h2>Register New Member</h2>
+<form method="post">
+  {% csrf_token %}
+  <label>First Name:</label><input type="text" name="first_name" required><br>
+  <label>Sur Name:</label><input type="text" name="sur_name" required><br>
+  <label>Contact Number:</label><input type="text" name="contact_number" required><br>
+  <label>Email (optional):</label><input type="email" name="email"><br>
+  <label for="job_or_study">Job/study:</label><input type="text" name="job_or_study" class="form-control">
+  <label>Aadhar Number:</label><input type="text" name="aadhar_number" required><br>
+  <label>Guardian Name:</label><input type="text" name="guardian_name" required><br>
+  <label>Guardian Contact Number:</label><input type="text" name="guardian_contact_number" required><br>
+
+  <label>Select Room:</label>
+  <select name="room" required>
+    {% for room in rooms %}
+      <option value="{{ room.id }}">{{ room.room_number }} (Floor {{ room.floor }})</option>
+    {% endfor %}
+  </select><br>
+
+  <button type="submit">Register</button>
+</form>
+
+{% if messages %}
+  {% for message in messages %}
+    <p style="color: green;">{{ message }}</p>
+  {% endfor %}
+{% endif %}
+
+{% block extrahead %}
+<script src="{% static 'admin/js/update_rent.js' %}"></script>
+{% endblock %}
+{% load static %}
+<script src="{% static 'admin/js/update_rent.js' %}"
+></script>"

@@ -1,0 +1,107 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block content %}
+
+{% if messages %}
+  {% for message in messages %}
+    <div style="color: green; margin-bottom: 10px;">{{ message }}</div>
+  {% endfor %}
+{% endif %}
+
+<h2>🚪 Vacate Member</h2>
+
+<form method="post" id="vacateForm">{% csrf_token %}
+  <!-- Room selection -->
+  <div style="margin-bottom: 10px;">
+    <label for="id_room">Room Number:</label>
+    {{ form.room }}
+    <button type="submit" name="view" value="1" class="button">View</button>
+  </div>
+
+  <!-- Member selection -->
+  {% if form.fields.member and form.fields.member.queryset.exists %}
+  <div style="margin-bottom: 10px;">
+    <label for="id_member">Member:</label>
+    {{ form.member }}
+    <button type="submit" name="member_view" value="1" class="button">View</button>
+  </div>
+  {% endif %}
+
+  <!-- Balance display -->
+  {% if balance is not None %}
+  <div style="margin-bottom: 10px;">
+    <label>Balance Amount:</label>
+    <input type="text" name="balance" value="{{ balance }}" readonly>
+  </div>
+
+  <!-- Final payment options -->
+  <div style="margin-bottom: 10px;">
+    <label>Final Payment Option:</label><br>
+    <input type="radio" name="payment_option" value="Paid"> Paid<br>
+    <input type="radio" name="payment_option" value="Waived"> Waived<br>
+    <input type="radio" name="payment_option" value="Partially Paid"> Partially Paid
+  </div>
+  {% endif %}
+
+  <!-- Note -->
+  <div style="margin-bottom: 10px;">
+    <label for="id_note">Note:</label><br>
+    {{ form.note }}
+  </div>
+
+  <!-- Button with JS confirm -->
+  <button type="submit" onclick="return confirmVacate()" class="default">Vacate</button>
+</form>
+
+<script>
+  function handleVacateConfirm() {
+    const option = document.querySelector('input[name="payment_option"]:checked');
+    const note = document.querySelector('#id_note').value.trim();
+    const balanceField = document.querySelector('input[name="balance"]');
+    const balance = balanceField ? parseFloat(balanceField.value) : 0;
+
+    if (!option) {
+      alert("Please select a final payment option.");
+      return;
+    }
+
+    if ((option.value === "Waived" || option.value === "Partially Paid") && note === "") {
+      alert("Please enter a note for waiver or partial payment.");
+      return;
+    }
+
+    const confirmVacate = confirm("Are you sure this person wants to vacate?");
+    if (confirmVacate) {
+      // Convert GET form to POST on confirmation
+      const form = document.getElementById('vacateForm');
+      form.method = "POST";
+      form.submit();
+    }
+  }
+</script>
+
+{% endblock %}
+
+{% block extrahead %}
+<script>
+  function confirmVacate() {
+    const option = document.querySelector('input[name="payment_option"]:checked');
+    const note = document.querySelector('#id_note').value.trim();
+    const balanceField = document.querySelector('input[name="balance"]');
+    const balance = parseFloat(balanceField ? balanceField.value : 0);
+
+    if (!option) {
+      alert("Please select a final payment option.");
+      return false;
+    }
+
+    if ((option.value === "Waived" || option.value === "Partially Paid") && note === "") {
+      alert("Please enter a note for waiver or partial payment.");
+      return false;
+    }
+
+    return confirm("Are you sure this person wants to vacate?");
+  }
+</script>
+{% endblock %}
